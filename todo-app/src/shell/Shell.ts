@@ -1,4 +1,5 @@
 import { History } from "history";
+import { IEventBus } from "./Events";
 
 export type IBearerToken = string;
 
@@ -10,7 +11,8 @@ export interface IMicroAppProps {
     containerId: string;
     host?: string;
     history?: History;
-    tokenProvider: ITokenProvider;
+    tokenProvider?: ITokenProvider;
+    eventBus?: IEventBus;
 }
 
 export interface IMicroApp<Props extends IMicroAppProps = IMicroAppProps> {
@@ -19,4 +21,5 @@ export interface IMicroApp<Props extends IMicroAppProps = IMicroAppProps> {
     mount?: (props: Props) => void;
     unmount?: (containerId: string) => void;
     tokenProvider?: ITokenProvider;
+    eventBus?: IEventBus;
 }
