@@ -1,8 +1,7 @@
 import * as React from "react";
 import { TodoItem, TodoStatus } from "./Model";
 import { nanoid } from 'nanoid';
-import { dispatchMessage } from "../shell/Events";
-import { microApp } from "../shell/Shell";
+import { microApp } from "../shell/MicroApp";
 
 const TODO_RESET = "@TODO/RESET";
 type TODO_RESET = typeof TODO_RESET;
@@ -76,7 +75,7 @@ const reducer = (state: AppState, action: TodoAction): AppState => {
             status: "Pending"
           };
 
-          dispatchMessage(action.type, { ...newTodo });
+          // dispatchMessage(action.type, { ...newTodo });
           return {
             items: [ 
               ...state.items, 
@@ -91,7 +90,7 @@ const reducer = (state: AppState, action: TodoAction): AppState => {
                 ...x,
                 status: action.payload.status
               };
-              dispatchMessage(action.type, { ...item });
+              // dispatchMessage(action.type, { ...item });
 
               return item;
             }
@@ -106,7 +105,7 @@ const reducer = (state: AppState, action: TodoAction): AppState => {
         case TODO_REMOVE:
           const item = state.items.find(x => x.id === action.payload.id);
           if (item) {
-            dispatchMessage(action.type, { ...item });
+            // dispatchMessage(action.type, { ...item });
           }
 
           return {

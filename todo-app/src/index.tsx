@@ -2,10 +2,10 @@ import * as React from 'react';
 import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
 import App from './App';
-import { microApp, MicroAppProps } from './features/shell/Shell';
-import { configureEvents, MICRO_APP_MESSAGE } from './features/shell/Events';
+import { IMicroAppProps } from './features/shell/Shell';
+import { microApp } from './features/shell/MicroApp';
 
-const render = (props: MicroAppProps) => {
+const render = (props: IMicroAppProps) => {
   const { containerId, history, host } = props;
   const element = document.getElementById(containerId);
   if (!element) {
@@ -13,23 +13,20 @@ const render = (props: MicroAppProps) => {
   }
 
   microApp.host = host;
-  microApp.tokenProvider = {
-    provider: props.tokenProvider || (() => undefined)
-  };
+  microApp.tokenProvider = props.tokenProvider || (() => undefined);
 
   const browserHistory = history || createBrowserHistory();
-  const microAppMessageHandler = configureEvents(window);
+
   ReactDOM.render(
       <App initialItems={microApp.appState.items} />, 
       element
   );
 
   microApp.history = browserHistory;
-  microApp.eventHandlers.set(MICRO_APP_MESSAGE, microAppMessageHandler);
 }
 
 if (typeof microApp.mount === "undefined") {
-  microApp.mount = (props: MicroAppProps) => {
+  microApp.mount = (props: IMicroAppProps) => {
       render(props);
       console.info(`mount micro app`);
   };
@@ -42,15 +39,8 @@ if (typeof microApp.unmount === "undefined") {
           ReactDOM.unmountComponentAtNode(element);
       }
 
-      microApp.tokenProvider = {
-          provider: () => undefined,
-          token: undefined
-      };
+      microApp.tokenProvider = undefined;
       microApp.host = undefined;
-      microApp.eventHandlers.forEach((handler, eventName, _) => {
-          window.removeEventListener(eventName, handler);
-      });
-      microApp.eventHandlers.clear();
       microApp.history = undefined;
 
       console.info(`unmount micro app`);

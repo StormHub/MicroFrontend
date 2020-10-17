@@ -1,50 +1,22 @@
 import { History } from "history";
-import { TodoItem } from "../todo/Model";
 
-declare global {
-    interface Window {
-        todoMicroApp: MicroApp;
-    }
+export type IBearerToken = string;
+
+export interface ITokenProvider {
+    provider: () => IBearerToken;
 }
 
-export const microApp: MicroApp = {
-    tokenProvider: {
-        token: undefined,
-        provider: () => undefined
-    },
-    eventHandlers: new Map<string, EventListener>(),
-    appState: { items: [] }
-};
-
-type IBearerToken = string | undefined;
-
-type BearerTokenProvider = {
-    (): IBearerToken;
-}
-
-export interface MicroAppTokenProvider {
-    provider: BearerTokenProvider;
-    token?: IBearerToken;
-}
-
-export interface MicroAppProps {
+export interface IMicroAppProps {
     containerId: string;
     host?: string;
     history?: History;
-    tokenProvider?: BearerTokenProvider;
+    tokenProvider: ITokenProvider;
 }
 
-export interface MicroApp {
+export interface IMicroApp<Props extends IMicroAppProps = IMicroAppProps> {
     host?: string;
     history?: History;
-    mount?: (props: MicroAppProps) => void;
+    mount?: (props: Props) => void;
     unmount?: (containerId: string) => void;
-    tokenProvider: MicroAppTokenProvider;
-    eventHandlers: Map<string, EventListener>;
-
-    // Store current state in the memory, we should
-    // not need to do this with real application
-    appState: {
-        items: TodoItem[]
-    }
+    tokenProvider?: ITokenProvider;
 }
