@@ -1,40 +1,43 @@
 import { createBrowserHistory, History } from "history";
+import { EventBus, IEventBus } from "./Events";
 
-export type IBearerToken = string | undefined;
+type IBearerToken = string;
 
-let BearerToken: IBearerToken;
+interface ITokenProvider {
+    provider: () => IBearerToken;
+}
 
-export const getBearerToken = (): IBearerToken => {
-    return BearerToken;
-};
+const dummyTokenProvider = () => "Main app bearer token provider";
 
-export const setBearerToken = (token: IBearerToken) => {
-    BearerToken = token;
-};
-
-type BearerTokenProvider = {
-    (): IBearerToken;
+export const createEventBus = () => {
+    const eventBus = new EventBus();
+    return eventBus;
 }
 
 export interface IShell {
     history: History;
     window: Window;
     document: Document;
-    tokenProvider: () => IBearerToken;
+    tokenProvider: ITokenProvider;
+    eventBus: IEventBus
 }
 
-export const Shell: IShell = {
+export const shell: IShell = {
     history: createBrowserHistory(),
     window,
     document,
-    tokenProvider: getBearerToken
+    tokenProvider: {
+        provider: dummyTokenProvider
+    },
+    eventBus: createEventBus()
 };
 
 export interface MicroAppProps {
     containerId: string;
     host: string;
     history: History;
-    tokenProvider: BearerTokenProvider;
+    tokenProvider: ITokenProvider;
+    eventBus: IEventBus;
 }
 
 export interface MicroApp {
@@ -58,8 +61,9 @@ export const mountMicroApp = (
     microApp.mount({
         containerId,
         host,
-        history: Shell.history,
-        tokenProvider: Shell.tokenProvider
+        history: shell.history,
+        tokenProvider: shell.tokenProvider,
+        eventBus: shell.eventBus
     });
 };
 

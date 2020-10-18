@@ -46,15 +46,18 @@ const TodoListItem : React.FC<{ item: TodoItem }> = ({ item }) => {
         update(item.id, checked ? "Done" : "Pending");
     }
 
+    const done = item.status === "Done";
+    const content = item.name;
+
     return (
         <Card elevation={3} key={item.id} className={classes.card} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
             <CardContent>
                 <Typography variant="body2" color="textSecondary" component="p">
-                    {item.name}
+                    {content}
                 </Typography>
             </CardContent>
             <CardActions disableSpacing>
-                <Checkbox size="small" color="primary" onChange={onStatusChanged} value={item.status === "Done"}/>
+                <Checkbox size="small" color="primary" onChange={onStatusChanged} checked={done}/>
                 { showRemove &&
                     (<IconButton size="small" aria-label="delete" onClick={onRemoveTodo} className={classes.delete}>
                         <DeleteIcon color="secondary" />

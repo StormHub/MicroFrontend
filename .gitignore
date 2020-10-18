@@ -1,4 +1,10 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+.vs/
+.vscode/
+!.vscode/launch.json
+.idea/
+*.iml
+.DS_Store
 
 # dependencies
 /node_modules

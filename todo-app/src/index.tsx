@@ -3,8 +3,7 @@ import ReactDOM from "react-dom";
 import { createBrowserHistory } from "history";
 import App from './App';
 import { IMicroAppProps } from './shell/Shell';
-import { microApp, TodoMicroApp } from './MicroApp';
-import { EventBus } from './shell/Events';
+import { createEventBus, microApp, TodoMicroApp } from './MicroApp';
 
 declare global {
   interface Window {
@@ -23,7 +22,7 @@ const render = (props: IMicroAppProps) => {
     microApp.tokenProvider = tokenProvider;
 
     const appHistory = history || createBrowserHistory();
-    const appEventBus = eventBus || new EventBus();
+    const appEventBus = eventBus || createEventBus();
 
     ReactDOM.render(
         <App initialItems={microApp.appState.items} />, 

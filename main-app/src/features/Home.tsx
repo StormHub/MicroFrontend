@@ -3,6 +3,8 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import { Navigation } from "./navigations/Navigation";
 import { Notes } from "./notes/Notes";
 import { Todo } from "./todo/Todo";
+import { shell } from "./shell/Shell";
+import { getTodoAppHost } from "./todo/Host";
 
 const MAIN_NOTES_ID = "main-notes";
 const TODO_APP_ID = "todo-app";
@@ -20,6 +22,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const Home : React.FC = () => {
   const classes = useStyles();
+  
+  React.useEffect(() => {
+    const handler = shell.eventBus.subscribe({
+      channel: getTodoAppHost(),
+      callback: payload => console.log(">> main app", payload)
+    });
+
+    return () => handler.unsubscribe();
+  }, []);
 
   return (
     <div className={classes.root}>

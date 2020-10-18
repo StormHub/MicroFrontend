@@ -31,7 +31,7 @@ export interface IEventBus {
     unregisterAll(): boolean
 }
 
-export class DomainEvent<T> implements IDomainEvent<T> {
+export class DomainEvent<T = {}> implements IDomainEvent<T> {
     public readonly recorded: Date;
     public readonly channel: string;
     public readonly payload: T;
@@ -85,25 +85,21 @@ export class EventBus implements IEventBus {
     }
   
     publish<T>(event: IDomainEvent<T>): void {
-      this.subscriptions.forEach(sub => {
-        if (sub.channel === event.channel) {
-          this.process(event, sub)
-        }
-      })
-    }
-  
-    private process<T>(event: IDomainEvent<T>, sub: IEventSubscription) {
-      const middleware: MiddlewareCallback<any>[] = [...this.middleware];
-  
+      const publishToChannel: MiddlewareCallback<any> = (event: IDomainEvent<T>) => {
+        this.subscriptions.forEach(x => {
+          if (x.channel === event.channel) {
+            x.callback(event);
+          }
+        })
+      };
+
+      const middleware: MiddlewareCallback<any>[] = [...this.middleware, publishToChannel];
+
       function run(event: IDomainEvent<T>) {
-        if (middleware.length === 0) {
-          return sub.callback(event.payload)
-        } else {
           const first: MiddlewareCallback<any> = middleware.splice(0, 1)[0]
           return first(event, run)
-        }
       }
-  
-      return run(event)
+
+      run(event);
     }
   }

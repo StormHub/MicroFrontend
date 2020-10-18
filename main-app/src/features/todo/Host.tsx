@@ -1,3 +1,3 @@
 export const getTodoAppHost = () => {
-    return "http://localhost:3001";
+    return process.env.REACT_APP_TODO_HOST || "http://localhost:3001";
 };

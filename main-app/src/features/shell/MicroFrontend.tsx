@@ -2,7 +2,7 @@ import React from "react";
 import CircularProgress from "@material-ui/core/CircularProgress/CircularProgress";
 import Paper from "@material-ui/core/Paper/Paper";
 import Typography from "@material-ui/core/Typography/Typography";
-import { getContainerId, mountMicroApp, Shell, unmountMicroApp } from "./Shell";
+import { getContainerId, mountMicroApp, shell, unmountMicroApp } from "./Shell";
 import Container from "@material-ui/core/Container/Container";
 
 interface MicroFrontendProps {
@@ -28,7 +28,7 @@ export class MicroFrontend extends React.Component<MicroFrontendProps, IState> {
 
     fetchMicroApp = () => {
         const { name, host } = this.props;
-        const document = Shell.document;
+        const document = shell.document;
         const scriptId = `micro-app-${name}`;
         if (document.getElementById(scriptId)) {
             this.renderMicroFrontend();
@@ -96,7 +96,7 @@ export class MicroFrontend extends React.Component<MicroFrontendProps, IState> {
         }
 
         const { name } = this.props;
-        const microApp = (Shell.window as any)[`${name}MicroApp`];
+        const microApp = (shell.window as any)[`${name}MicroApp`];
         if (!microApp) {
             return (
                 <Paper elevation={0}>
