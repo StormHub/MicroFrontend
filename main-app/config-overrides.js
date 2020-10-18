@@ -1,11 +1,12 @@
 // tslint:disable
 const rewireReactHotLoader = require("react-app-rewire-hot-loader");
-const rewireUglify = require("./config/rewire-uglify");
+// const rewireUglify = require("./config/rewire-uglify");
+
 module.exports = function override(config, env) {
     config = rewireReactHotLoader(config, env);
     //config = rewireSass(config, env);
     if (env === "production") {
-        rewireUglify(config);
+        // rewireUglify(config);
     }
     return config;
 };
